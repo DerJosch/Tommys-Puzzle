@@ -2,19 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class SquareController : MonoBehaviour {
     
-    public int row = 0;
-    public int column = 0;
-    public State currentState = State.ONE;
-    
     public SpriteRenderer spriteRenderer;
-
+    
+    public int row;
+    public int column;
+    public State currentState = State.ONE;
+    public State winState = State.ONE;
+    
     public List<SquareController> neighbourSquares = new List<SquareController>();
 
+    private GameController gameController;
+
     void Start() {
+        gameController = FindObjectOfType<GameController>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -23,17 +26,13 @@ public class SquareController : MonoBehaviour {
         foreach (SquareController neighbourSquare in neighbourSquares) {
             neighbourSquare.setState(nextState(neighbourSquare.currentState));
         }
+
+        gameController.check();
     }
 
     public void setState(State state) {
         currentState = state;
-
-        switch (state) {
-            case State.ONE: spriteRenderer.color = Color.red; break;
-            case State.TWO: spriteRenderer.color = Color.green; break;
-            case State.THREE: spriteRenderer.color = Color.blue; break;
-            case State.FOUR: spriteRenderer.color = Color.yellow; break;
-        }
+        spriteRenderer.color = getColor(state);
     }
 
     private State nextState(State state) {
@@ -51,5 +50,15 @@ public class SquareController : MonoBehaviour {
         TWO,    // green
         THREE,  // blue
         FOUR    // yellow
+    }
+    
+    public static Color getColor(State state) {
+        switch (state) {
+            case State.ONE: return new Color(1f, 0.5f, 0.5f);
+            case State.TWO: return new Color(0.5f, 1f, 0.5f);
+            case State.THREE: return new Color(0.5f, 0.5f, 1f);
+            case State.FOUR: return new Color(1f, 1f, 0.5f);
+            default: throw new NotSupportedException("State " + state + " is unsupported.");
+        }
     }
 }
