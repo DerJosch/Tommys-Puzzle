@@ -58,6 +58,7 @@ public class Game : MonoBehaviour {
                     (-fieldHeight / 2 + height / 2 + y * height + y * spacing) * -1,
                     0
                 ), Quaternion.identity);
+                puzzleSquare.transform.Rotate(10, 0, 0);
                 puzzleSquare.name = $"PuzzleCell x:{x}, y: {y}";
                 field[puzzleCellIndex] = puzzleSquare;
 
